@@ -21,9 +21,9 @@
   "scripts": {
     "start": "bun src/main.ts",
     "start:dev": "bun src/main.ts",
-    "check:types": "tsc --noEmit",
+    "check:types": "bun --bun tsc --noEmit",
     "test": "echo \"Error: oops, the actor has no tests yet, sad!\" && exit 1",
-    "get-binaries": "camoufox-js fetch"
+    "get-binaries": "bun --bun camoufox-js fetch"
   },
   "author": "It's not you it's me",
   "license": "SEE LICENSE IN ../../LICENSE"

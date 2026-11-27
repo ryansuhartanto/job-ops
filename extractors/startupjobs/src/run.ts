@@ -248,7 +248,7 @@ export async function runStartupJobs(
       success: false,
       jobs: [],
       error: missingBrowser
-        ? `${message}. Install browser binaries with 'bunx playwright install'.`
+        ? `${message}. Install browser binaries with 'bunx --bun playwright install'.`
         : message,
     };
   }

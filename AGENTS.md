@@ -116,7 +116,7 @@ Run from repository root:
 6. `bun run --filter ./orchestrator build:client`
 7. `bun run --filter ./orchestrator test:run`
 
-CI runs on Node 22. If local behavior differs, verify with Node 22 before concluding a change is valid.
+CI runs on the latest Bun. If local behavior differs, verify with the latest Bun before concluding a change is valid.
 
 ### Scope-specific checks
 

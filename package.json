@@ -13,8 +13,8 @@
     "check:types:shared": "bun run --filter ./shared check:types",
     "check:types": "bun run --filter ./shared check:types && bun run --filter ./orchestrator check:types",
     "check:types:ukvisajobs": "bun run --filter ukvisajobs-extractor check:types",
-    "check:all": "./orchestrator/node_modules/.bin/biome ci .",
-    "format:all": "./orchestrator/node_modules/.bin/biome format . --write",
+    "check:all": "bun --bun ./orchestrator/node_modules/.bin/biome ci .",
+    "format:all": "bun --bun ./orchestrator/node_modules/.bin/biome format . --write",
     "check:types:gradcracker": "bun run --filter gradcracker-extractor check:types",
     "docs:dev": "bun run --filter ./docs-site start",
     "docs:build": "bun run --filter ./docs-site build",
@@ -24,7 +24,7 @@
     "typst-theme:generate": "bun ./scripts/generate-typst-themes.mjs",
     "typst-theme:validate": "bun ./scripts/generate-typst-themes.mjs --check && bun run --filter ./orchestrator test:run src/server/services/resume-renderer/typst.test.ts",
     "release:set-version": "bun ./scripts/set-orchestrator-version.mjs",
-    "knip": "knip"
+    "knip": "bun --bun knip"
   },
   "devDependencies": {
     "@types/node": "^25.2.3",
@@ -37,9 +37,6 @@
       "version": ">=1.4.5",
       "onFail": "error"
     }
-  },
-  "volta": {
-    "node": "22.22.1"
   },
   "dependencies": {
     "@anthropic-ai/claude-agent-sdk": "0.3.316"

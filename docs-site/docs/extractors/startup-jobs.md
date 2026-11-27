@@ -37,7 +37,7 @@ Defaults and constraints:
 
 - No new credentials are required.
 - The integration runs with `enrichDetails: true`, so it opens job detail pages for richer records.
-- Browser binaries are not downloaded automatically with the package. Install them with `bunx playwright install` before using this extractor in a fresh environment.
+- Browser binaries are not downloaded automatically with the package. Install them with `bunx --bun playwright install` before using this extractor in a fresh environment.
 - When **Search cities** is set, the extractor runs once per city and once per search term.
 - Workplace type is a global run filter, not a per-city override.
 - Without explicit cities, the selected country is used as the location filter except for broad modes such as `worldwide` and `usa/ca`.
@@ -57,7 +57,7 @@ Defaults and constraints:
 ### Job descriptions are missing
 
 - Detail enrichment depends on Playwright browser binaries being installed locally.
-- Run `bunx playwright install` and retry if the extractor cannot open job detail pages.
+- Run `bunx --bun playwright install` and retry if the extractor cannot open job detail pages.
 
 ## Related pages
 

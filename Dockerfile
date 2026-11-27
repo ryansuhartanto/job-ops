@@ -3,7 +3,7 @@
 # ============================================================================
 # SHARED BASE IMAGES
 # ============================================================================
-FROM --platform=$TARGETPLATFORM node:22-slim AS runtime-base
+FROM --platform=$TARGETPLATFORM debian:bookworm-slim AS runtime-base
 
 ENV DEBIAN_FRONTEND=noninteractive
 ENV NODE_ENV=production
@@ -17,6 +17,8 @@ ARG CODEX_CLI_VERSION=0.144.6
 ARG CLAUDE_CLI_VERSION=2.1.211
 
 COPY --from=oven/bun /usr/local/bin/bun /usr/local/bin/bun
+# Binaries with a `#!/usr/bin/env node` launcher, such as the Codex CLI, run on Bun.
+RUN ln -s /usr/local/bin/bun /usr/local/bin/node
 
 # Install runtime dependencies shared by build and production stages.
 RUN apt-get update && apt-get install -y --no-install-recommends \
@@ -36,12 +38,14 @@ RUN bun add -g @anthropic-ai/claude-code@${CLAUDE_CLI_VERSION}
 
 WORKDIR /app
 
-FROM --platform=$BUILDPLATFORM node:22-slim AS build-base
+FROM --platform=$BUILDPLATFORM debian:bookworm-slim AS build-base
 
 ENV DEBIAN_FRONTEND=noninteractive
 ENV NODE_ENV=production
 
 COPY --from=oven/bun /usr/local/bin/bun /usr/local/bin/bun
+# Binaries with a `#!/usr/bin/env node` launcher, such as the Codex CLI, run on Bun.
+RUN ln -s /usr/local/bin/bun /usr/local/bin/node
 
 WORKDIR /app
 
@@ -148,7 +152,6 @@ COPY extractors/idbigtech ./extractors/idbigtech
 FROM build-sources AS docs-build
 
 WORKDIR /app/docs-site
-ENV NODE_OPTIONS=--max-old-space-size=1536
 RUN bun run build
 
 FROM build-sources AS client-build

@@ -20,8 +20,8 @@
   "scripts": {
     "start": "bun src/main.ts",
     "start:dev": "bun src/main.ts",
-    "check:types": "tsc --noEmit",
-    "get-binaries": "camoufox-js fetch"
+    "check:types": "bun --bun tsc --noEmit",
+    "get-binaries": "bun --bun camoufox-js fetch"
   },
   "author": "",
   "license": "SEE LICENSE IN ../../LICENSE"

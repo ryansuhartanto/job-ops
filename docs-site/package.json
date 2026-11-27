@@ -3,13 +3,13 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "docusaurus": "docusaurus",
-    "start": "docusaurus start --host 0.0.0.0 --port 3006",
-    "build": "docusaurus build",
-    "serve": "docusaurus serve",
-    "clear": "docusaurus clear",
-    "typecheck": "tsc",
-    "docs:version": "docusaurus docs:version"
+    "docusaurus": "bun --bun docusaurus",
+    "start": "bun --bun docusaurus start --host 0.0.0.0 --port 3006",
+    "build": "bun --bun docusaurus build",
+    "serve": "bun --bun docusaurus serve",
+    "clear": "bun --bun docusaurus clear",
+    "typecheck": "bun --bun tsc",
+    "docs:version": "bun --bun docusaurus docs:version"
   },
   "dependencies": {
     "@docusaurus/core": "3.9.2",
@@ -38,8 +38,5 @@
       "last 3 firefox version",
       "last 5 safari version"
     ]
-  },
-  "engines": {
-    "node": ">=20.0"
   }
 }

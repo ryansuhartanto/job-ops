@@ -11,13 +11,13 @@ bun install
 If Playwright browsers are skipped in your environment, install Firefox:
 
 ```bash
-bunx playwright install firefox
+bunx --bun playwright install firefox
 ```
 
 If Camoufox assets are missing, fetch them:
 
 ```bash
-bunx camoufox-js fetch
+bunx --bun camoufox-js fetch
 ```
 
 ## Configuration

@@ -11,7 +11,7 @@
     "typescript": "~5.9.0"
   },
   "scripts": {
-    "check:types": "tsc --noEmit",
-    "get-binaries": "bunx playwright install"
+    "check:types": "bun --bun tsc --noEmit",
+    "get-binaries": "bunx --bun playwright install"
   }
 }

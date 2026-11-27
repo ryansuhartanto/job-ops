@@ -188,7 +188,7 @@ export function summarizeGradcrackerBrowserFailure(
     return [
       "Gradcracker browser fallback could not launch Playwright Firefox.",
       path ? `Missing executable: ${path}.` : undefined,
-      "Rebuild the Docker image so the Node Playwright browser binary is installed, or run `bunx playwright install firefox` in the runtime image.",
+      "Rebuild the Docker image so the Node Playwright browser binary is installed, or run `bunx --bun playwright install firefox` in the runtime image.",
     ]
       .filter(Boolean)
       .join(" ");

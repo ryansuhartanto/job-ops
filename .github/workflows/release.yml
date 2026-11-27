@@ -29,11 +29,6 @@ jobs:
         with:
           ref: main
           fetch-depth: 0
-
-      - name: Setup Node
-        uses: actions/setup-node@v4
-        with:
-          node-version: 22
       - name: Setup Bun
         uses: oven-sh/setup-bun@v2
 
@@ -104,7 +99,7 @@ jobs:
       - name: Format generated docs files
         if: steps.validate.outputs.version_already_set != 'true'
         run: |
-          ./orchestrator/node_modules/.bin/biome check --write \
+          bun --bun ./orchestrator/node_modules/.bin/biome check --write \
             docs-site/versions.json \
             docs-site/versioned_docs \
             docs-site/versioned_sidebars

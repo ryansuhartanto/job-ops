@@ -8,6 +8,6 @@
     "typescript": "~5.9.0"
   },
   "scripts": {
-    "check:types": "tsc --noEmit"
+    "check:types": "bun --bun tsc --noEmit"
   }
 }

@@ -16,7 +16,7 @@
   "scripts": {
     "start": "bun src/main.ts",
     "start:dev": "bun src/main.ts",
-    "check:types": "tsc --noEmit",
-    "test:run": "vitest run"
+    "check:types": "bun --bun tsc --noEmit",
+    "test:run": "bun --bun vitest run"
   }
 }
