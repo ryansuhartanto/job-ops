@@ -32,16 +32,13 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 22
-          cache: "npm"
-          cache-dependency-path: package-lock.json
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v2
       - name: Install dependencies
-        run: npm ci --workspaces --include-workspace-root
-        working-directory: .
-      - name: Build better-sqlite3
-        run: npm --workspace orchestrator rebuild better-sqlite3
+        run: bun ci
         working-directory: .
       - name: Run Tests
-        run: npm run test:all
+        run: bun run test:all
         working-directory: .
 
   typecheck:
@@ -50,7 +47,7 @@ jobs:
     strategy:
       matrix:
         project:
-          - orchestrator
+          - job-ops-orchestrator
           - adzuna-extractor
           - hiringcafe-extractor
           - gradcracker-extractor
@@ -63,24 +60,24 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 22
-          cache: "npm"
-          cache-dependency-path: package-lock.json
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v2
 
       - name: Install dependencies
-        run: npm ci --workspaces --include-workspace-root
+        run: bun ci
         working-directory: .
 
       - name: Check shared package types
-        run: npm run check:types:shared
+        run: bun run check:types:shared
         working-directory: .
 
       - name: Type Check ${{ matrix.project }}
-        run: npm --workspace ${{ matrix.project }} run check:types
+        run: bun run --filter '${{ matrix.project }}' check:types
         working-directory: .
 
       - name: Build ${{ matrix.project }} (client)
-        if: matrix.project == 'orchestrator'
-        run: npm --workspace orchestrator run build:client
+        if: matrix.project == 'job-ops-orchestrator'
+        run: bun run --filter 'job-ops-orchestrator' build:client
         working-directory: .
 
   docs:
@@ -92,13 +89,13 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 22
-          cache: "npm"
-          cache-dependency-path: package-lock.json
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v2
 
       - name: Install dependencies
-        run: npm ci --workspaces --include-workspace-root
+        run: bun ci
         working-directory: .
 
       - name: Build documentation site
-        run: npm run check:docs
+        run: bun run check:docs
         working-directory: .

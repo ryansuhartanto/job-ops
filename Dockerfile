@@ -16,6 +16,8 @@ ENV PATH=/root/.local/bin:${PATH}
 ARG CODEX_CLI_VERSION=0.144.6
 ARG CLAUDE_CLI_VERSION=2.1.211
 
+COPY --from=oven/bun /usr/local/bin/bun /usr/local/bin/bun
+
 # Install runtime dependencies shared by build and production stages.
 RUN apt-get update && apt-get install -y --no-install-recommends \
     ca-certificates \
@@ -38,6 +40,8 @@ FROM --platform=$BUILDPLATFORM node:22-slim AS build-base
 
 ENV DEBIAN_FRONTEND=noninteractive
 ENV NODE_ENV=production
+
+COPY --from=oven/bun /usr/local/bin/bun /usr/local/bin/bun
 
 WORKDIR /app
 
@@ -75,7 +79,7 @@ FROM build-base AS node-deps
 ARG BUILDARCH
 
 # Copy package files for dependency installation.
-COPY package*.json ./
+COPY package.json bun.lock ./
 COPY docs-site/package*.json ./docs-site/
 COPY shared/package*.json ./shared/
 COPY orchestrator/package*.json ./orchestrator/
@@ -105,8 +109,7 @@ COPY extractors/idbigtech/package*.json ./extractors/idbigtech/
 
 # Install build-time Node dependencies on the native builder platform. The
 # resulting client/docs assets are architecture-neutral static files.
-RUN npm install --workspaces --include-workspace-root --include=dev \
-    --no-audit --no-fund --progress=false
+RUN bun ci
 
 FROM node-deps AS build-sources
 
@@ -146,12 +149,12 @@ FROM build-sources AS docs-build
 
 WORKDIR /app/docs-site
 ENV NODE_OPTIONS=--max-old-space-size=1536
-RUN npm run build
+RUN bun run build
 
 FROM build-sources AS client-build
 
 WORKDIR /app/orchestrator
-RUN npm run build:client
+RUN bun run build:client
 
 # ============================================================================
 # PRODUCTION INPUT STAGES
@@ -166,7 +169,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     rm -rf /var/lib/apt/lists/* /var/cache/apt/archives/*
 
 # Copy package files for production dependency installation.
-COPY package*.json ./
+COPY package.json bun.lock ./
 COPY docs-site/package*.json ./docs-site/
 COPY shared/package*.json ./shared/
 COPY orchestrator/package*.json ./orchestrator/
@@ -197,9 +200,8 @@ COPY extractors/idbigtech/package*.json ./extractors/idbigtech/
 # Install production Node dependencies only. Do not add --omit=optional: the
 # Claude Agent SDK (claude_agent_sdk provider) ships its Claude Code binary as a
 # per-platform optional dependency.
-RUN npm install --workspaces --include-workspace-root --omit=dev \
-    --no-audit --no-fund --progress=false \
-    && npm cache clean --force
+RUN bun ci --omit=dev \
+    && rm -rf /root/.bun/install/cache
 
 # Fail the build if the Agent SDK's native Claude Code binary for this platform
 # is missing or cannot run (no network or credentials involved).

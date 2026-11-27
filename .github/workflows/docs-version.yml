@@ -25,11 +25,11 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 22
-          cache: "npm"
-          cache-dependency-path: package-lock.json
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v2
 
       - name: Install dependencies
-        run: npm ci --workspaces --include-workspace-root
+        run: bun ci
         working-directory: .
 
       - name: Derive docs version from tag
@@ -43,7 +43,7 @@ jobs:
           echo "version=$VERSION" >> "$GITHUB_OUTPUT"
 
       - name: Generate docs version
-        run: npm run docs:version -- "${{ steps.vars.outputs.version }}"
+        run: bun run docs:version -- "${{ steps.vars.outputs.version }}"
         working-directory: .
 
       - name: Format generated docs files
