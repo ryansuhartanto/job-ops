@@ -20,10 +20,11 @@ if (!existsSync(dataDir)) {
 }
 
 const sqlite = new Database(DB_PATH);
-sqlite.run("PRAGMA journal_mode = WAL");
-// better-sqlite3 enabled these by default; bun:sqlite does not.
-sqlite.run("PRAGMA foreign_keys = ON");
+// better-sqlite3 enabled these by default; bun:sqlite does not. The timeout
+// comes first so switching to WAL waits for a lock instead of failing.
 sqlite.run("PRAGMA busy_timeout = 5000");
+sqlite.run("PRAGMA foreign_keys = ON");
+sqlite.run("PRAGMA journal_mode = WAL");
 let isClosed = false;
 
 // shortcut: drizzle 0.45 types bun-sqlite run results as void although bun:sqlite
