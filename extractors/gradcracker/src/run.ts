@@ -793,7 +793,6 @@ async function runBrowserCrawler(
     await new Promise<void>((resolve, reject) => {
       const child = spawn(process.execPath, ["src/main.ts"], {
         cwd: EXTRACTOR_DIR,
-        shell: true,
         stdio: ["ignore", "pipe", "pipe"],
         env: {
           ...process.env,
