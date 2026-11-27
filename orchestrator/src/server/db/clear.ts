@@ -15,7 +15,8 @@ const DB_PATH = join(getDataDir(), "jobs.db");
  */
 export function clearDatabase(): { jobsDeleted: number; runsDeleted: number } {
   const sqlite = new Database(DB_PATH);
-  // better-sqlite3 enabled foreign keys by default; bun:sqlite does not.
+  // better-sqlite3 enabled these by default; bun:sqlite does not.
+  sqlite.run("PRAGMA busy_timeout = 5000");
   sqlite.run("PRAGMA foreign_keys = ON");
 
   try {

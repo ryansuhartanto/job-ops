@@ -19,8 +19,8 @@ if (!existsSync(dataDir)) {
 
 const sqlite = new Database(DB_PATH);
 // better-sqlite3 enabled these by default; bun:sqlite does not.
-sqlite.run("PRAGMA foreign_keys = ON");
 sqlite.run("PRAGMA busy_timeout = 5000");
+sqlite.run("PRAGMA foreign_keys = ON");
 const DEFAULT_TENANT_ID = "tenant_default";
 const DEFAULT_TENANT_NAME = "JobOps";
 const DEFAULT_TENANT_SLUG = "default";
