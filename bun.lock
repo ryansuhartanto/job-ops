@@ -24,6 +24,9 @@
     "career-boards/greenhouse": {
       "name": "@career-boards/greenhouse",
       "version": "0.0.1",
+      "devDependencies": {
+        "vitest": "^4.0.16",
+      },
     },
     "career-boards/workday": {
       "name": "@career-boards/workday",
