@@ -159,7 +159,7 @@ Releases are driven from GitHub Actions.
 The workflow will:
 
 - bump `orchestrator/package.json`
-- update `package-lock.json`
+- update `bun.lock`
 - cut the matching Docusaurus docs version
 - commit the version bump to `main`
 - create and push tag `vX.Y.Z`
@@ -173,7 +173,7 @@ The app version shown in the UI is sourced from `orchestrator/package.json`, so 
 Run from the repository root:
 
 ```bash
-./orchestrator/node_modules/.bin/biome ci .
+bun --bun ./orchestrator/node_modules/.bin/biome ci .
 bun run check:types:shared
 bun run --filter ./orchestrator check:types
 bun run --filter gradcracker-extractor check:types

@@ -51,7 +51,7 @@ services:
         # Rebuild container when package.json changes
         - path: ./orchestrator/package.json
           action: rebuild
-        - path: ./orchestrator/package-lock.json
+        - path: ./bun.lock
           action: rebuild
         # Sync source code changes and rebuild inside container
         - path: ./orchestrator/src

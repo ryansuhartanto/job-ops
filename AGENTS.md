@@ -108,7 +108,7 @@ Before marking work complete, verify changes with the same checks used by CI.
 
 Run from repository root:
 
-1. `./orchestrator/node_modules/.bin/biome ci .`
+1. `bun --bun ./orchestrator/node_modules/.bin/biome ci .`
 2. `bun run check:types:shared`
 3. `bun run --filter ./orchestrator check:types`
 4. `bun run --filter gradcracker-extractor check:types`
