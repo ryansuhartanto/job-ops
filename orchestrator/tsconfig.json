@@ -9,7 +9,12 @@
     "resolveJsonModule": true,
     "isolatedModules": true,
     "jsx": "react-jsx",
-    "types": ["bun", "vitest/globals", "@testing-library/jest-dom", "vite/client"],
+    "types": [
+      "bun-types/sqlite",
+      "vitest/globals",
+      "@testing-library/jest-dom",
+      "vite/client"
+    ],
     "baseUrl": ".",
     "paths": {
       "@/*": ["src/*"],

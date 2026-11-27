@@ -2,9 +2,9 @@
  * Database utility scripts.
  */
 
+import Database from "bun:sqlite";
 import { existsSync, unlinkSync } from "node:fs";
 import { join } from "node:path";
-import Database from "bun:sqlite";
 import { getDataDir } from "../config/dataDir";
 
 // Database path - can be overridden via env for Docker
@@ -15,6 +15,8 @@ const DB_PATH = join(getDataDir(), "jobs.db");
  */
 export function clearDatabase(): { jobsDeleted: number; runsDeleted: number } {
   const sqlite = new Database(DB_PATH);
+  // better-sqlite3 enabled foreign keys by default; bun:sqlite does not.
+  sqlite.run("PRAGMA foreign_keys = ON");
 
   try {
     sqlite.prepare("DELETE FROM stage_events").run();

@@ -1,10 +1,10 @@
+import Database from "bun:sqlite";
 import {
   createServer,
   type Server as HttpServer,
   type Server,
 } from "node:http";
 import { join } from "node:path";
-import Database from "bun:sqlite";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { startServer, stopServer } from "../api/routes/test-utils";
 

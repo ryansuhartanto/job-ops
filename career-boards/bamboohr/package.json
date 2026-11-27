@@ -9,5 +9,8 @@
     "./get-company-info": "./src/get-company-info.ts",
     "./get-job-details": "./src/get-job-details.ts",
     "./get-jobs-from-careers-list": "./src/get-jobs-from-careers-list.ts"
+  },
+  "devDependencies": {
+    "vitest": "^4.0.16"
   }
 }

@@ -46,17 +46,13 @@ describe.sequential("database migrations", () => {
       migratedDb.close();
     `;
 
-    execFileSync(
-      process.execPath,
-      ["-e", script],
-      {
-        env: {
-          ...process.env,
-          DATA_DIR: tempDir,
-        },
-        stdio: "pipe",
+    execFileSync(process.execPath, ["-e", script], {
+      env: {
+        ...process.env,
+        DATA_DIR: tempDir,
       },
-    );
+      stdio: "pipe",
+    });
   });
 
   it("creates tenant foreign keys for tenant-scoped core tables", async () => {
@@ -86,17 +82,13 @@ describe.sequential("database migrations", () => {
       migratedDb.close();
     `;
 
-    execFileSync(
-      process.execPath,
-      ["-e", script],
-      {
-        env: {
-          ...process.env,
-          DATA_DIR: tempDir,
-        },
-        stdio: "pipe",
+    execFileSync(process.execPath, ["-e", script], {
+      env: {
+        ...process.env,
+        DATA_DIR: tempDir,
       },
-    );
+      stdio: "pipe",
+    });
   });
 
   it("marks only existing workspaces for legacy onboarding migration", async () => {
@@ -131,14 +123,10 @@ describe.sequential("database migrations", () => {
       migratedDb.close();
     `;
 
-    execFileSync(
-      process.execPath,
-      ["-e", script],
-      {
-        env: { ...process.env, DATA_DIR: tempDir },
-        stdio: "pipe",
-      },
-    );
+    execFileSync(process.execPath, ["-e", script], {
+      env: { ...process.env, DATA_DIR: tempDir },
+      stdio: "pipe",
+    });
   });
 
   it("creates hosted usage tables with user-scoped foreign keys and indexes", async () => {
@@ -188,17 +176,13 @@ describe.sequential("database migrations", () => {
       migratedDb.close();
     `;
 
-    execFileSync(
-      process.execPath,
-      ["-e", script],
-      {
-        env: {
-          ...process.env,
-          DATA_DIR: tempDir,
-        },
-        stdio: "pipe",
+    execFileSync(process.execPath, ["-e", script], {
+      env: {
+        ...process.env,
+        DATA_DIR: tempDir,
       },
-    );
+      stdio: "pipe",
+    });
   });
 
   it("backfills legacy PDF rows as generated", async () => {
@@ -233,17 +217,13 @@ describe.sequential("database migrations", () => {
       migratedDb.close();
     `;
 
-    execFileSync(
-      process.execPath,
-      ["-e", script],
-      {
-        env: {
-          ...process.env,
-          DATA_DIR: tempDir,
-        },
-        stdio: "pipe",
+    execFileSync(process.execPath, ["-e", script], {
+      env: {
+        ...process.env,
+        DATA_DIR: tempDir,
       },
-    );
+      stdio: "pipe",
+    });
   });
 
   it("adds the tracer-link composite unique index to legacy tables", async () => {
@@ -312,17 +292,13 @@ describe.sequential("database migrations", () => {
       migratedDb.close();
     `;
 
-    execFileSync(
-      process.execPath,
-      ["-e", script],
-      {
-        env: {
-          ...process.env,
-          DATA_DIR: tempDir,
-        },
-        stdio: "pipe",
+    execFileSync(process.execPath, ["-e", script], {
+      env: {
+        ...process.env,
+        DATA_DIR: tempDir,
       },
-    );
+      stdio: "pipe",
+    });
   });
 
   it("relaxes legacy NOT NULL password columns while preserving accounts", async () => {
@@ -419,19 +395,15 @@ describe.sequential("database migrations", () => {
       migratedDb.close();
     `;
 
-    execFileSync(
-      process.execPath,
-      ["-e", script],
-      {
-        env: {
-          ...process.env,
-          DATA_DIR: tempDir,
-          BASIC_AUTH_USER: "",
-          BASIC_AUTH_PASSWORD: "",
-        },
-        stdio: "pipe",
+    execFileSync(process.execPath, ["-e", script], {
+      env: {
+        ...process.env,
+        DATA_DIR: tempDir,
+        BASIC_AUTH_USER: "",
+        BASIC_AUTH_PASSWORD: "",
       },
-    );
+      stdio: "pipe",
+    });
   });
 
   it("creates sso_identities with a unique provider subject", async () => {
@@ -507,17 +479,13 @@ describe.sequential("database migrations", () => {
       migratedDb.close();
     `;
 
-    execFileSync(
-      process.execPath,
-      ["-e", script],
-      {
-        env: {
-          ...process.env,
-          DATA_DIR: tempDir,
-        },
-        stdio: "pipe",
+    execFileSync(process.execPath, ["-e", script], {
+      env: {
+        ...process.env,
+        DATA_DIR: tempDir,
       },
-    );
+      stdio: "pipe",
+    });
   });
 
   it("creates the role_cvs table with private scoping and per-scope unique names", async () => {
@@ -566,17 +534,13 @@ describe.sequential("database migrations", () => {
       migratedDb.close();
     `;
 
-    execFileSync(
-      process.execPath,
-      ["-e", script],
-      {
-        env: {
-          ...process.env,
-          DATA_DIR: tempDir,
-        },
-        stdio: "pipe",
+    execFileSync(process.execPath, ["-e", script], {
+      env: {
+        ...process.env,
+        DATA_DIR: tempDir,
       },
-    );
+      stdio: "pipe",
+    });
 
     // Re-running migrations on an already-migrated database must succeed.
     execFileSync(
@@ -599,11 +563,10 @@ describe.sequential("database migrations", () => {
     tempDir = await mkdtemp(join(tmpdir(), "job-ops-migrate-"));
     const runMigrations = `import { join } from "node:path"; import { pathToFileURL } from "node:url"; await import(pathToFileURL(join(process.cwd(), "src/server/db/migrate.ts")).href);`;
     const exec = (script: string) =>
-      execFileSync(
-        process.execPath,
-        ["-e", script],
-        { env: { ...process.env, DATA_DIR: tempDir ?? "" }, stdio: "pipe" },
-      );
+      execFileSync(process.execPath, ["-e", script], {
+        env: { ...process.env, DATA_DIR: tempDir ?? "" },
+        stdio: "pipe",
+      });
 
     exec(`
       ${runMigrations}
@@ -686,17 +649,13 @@ describe.sequential("database migrations", () => {
     `;
 
     for (const source of [migrateOnly, script]) {
-      execFileSync(
-        process.execPath,
-        ["-e", source],
-        {
-          env: {
-            ...process.env,
-            DATA_DIR: tempDir,
-          },
-          stdio: "pipe",
+      execFileSync(process.execPath, ["-e", source], {
+        env: {
+          ...process.env,
+          DATA_DIR: tempDir,
         },
-      );
+        stdio: "pipe",
+      });
     }
   });
 
@@ -704,11 +663,10 @@ describe.sequential("database migrations", () => {
     tempDir = await mkdtemp(join(tmpdir(), "job-ops-migrate-"));
     const runMigrations = `import { join } from "node:path"; import { pathToFileURL } from "node:url"; await import(pathToFileURL(join(process.cwd(), "src/server/db/migrate.ts")).href);`;
     const exec = (script: string) =>
-      execFileSync(
-        process.execPath,
-        ["-e", script],
-        { env: { ...process.env, DATA_DIR: tempDir ?? "" }, stdio: "pipe" },
-      );
+      execFileSync(process.execPath, ["-e", script], {
+        env: { ...process.env, DATA_DIR: tempDir ?? "" },
+        stdio: "pipe",
+      });
 
     // An install from before scheduled runs: pipeline_runs has no trigger.
     exec(`
@@ -820,16 +778,12 @@ describe.sequential("database migrations", () => {
       migratedDb.close();
     `;
 
-    execFileSync(
-      process.execPath,
-      ["-e", script],
-      {
-        env: {
-          ...process.env,
-          DATA_DIR: tempDir,
-        },
-        stdio: "pipe",
+    execFileSync(process.execPath, ["-e", script], {
+      env: {
+        ...process.env,
+        DATA_DIR: tempDir,
       },
-    );
+      stdio: "pipe",
+    });
   });
 });

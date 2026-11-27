@@ -1,8 +1,8 @@
+import Database from "bun:sqlite";
 import { mkdtemp, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { basename, join, resolve } from "node:path";
 import { format } from "node:util";
-import Database from "bun:sqlite";
 
 type Scenario = {
   label: string;

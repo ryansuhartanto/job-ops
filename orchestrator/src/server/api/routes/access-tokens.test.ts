@@ -1,7 +1,7 @@
+import Database from "bun:sqlite";
 import { createHash } from "node:crypto";
 import type { Server } from "node:http";
 import { join } from "node:path";
-import Database from "bun:sqlite";
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
 import { startServer, stopServer } from "./test-utils";
 
