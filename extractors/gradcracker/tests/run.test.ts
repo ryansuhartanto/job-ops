@@ -251,12 +251,12 @@ describe("Gradcracker HTTP scraper", () => {
           "Failed to launch browser. Please check the following:",
           "browserType.launchPersistentContext: Executable doesn't exist at /ms-playwright/firefox-1511/firefox/firefox",
           "Please run the following command to download new browsers:",
-          "npx playwright install",
+          "bunx playwright install",
         ],
         "Crawler exited with code 1",
       ),
     ).toBe(
-      "Gradcracker browser fallback could not launch Playwright Firefox. Missing executable: /ms-playwright/firefox-1511/firefox/firefox. Rebuild the Docker image so the Node Playwright browser binary is installed, or run `npx playwright install firefox` in the runtime image.",
+      "Gradcracker browser fallback could not launch Playwright Firefox. Missing executable: /ms-playwright/firefox-1511/firefox/firefox. Rebuild the Docker image so the Node Playwright browser binary is installed, or run `bunx playwright install firefox` in the runtime image.",
     );
   });
 });

@@ -10,7 +10,7 @@ sidebar_position: 1
 - Confirm docs build exists:
 
 ```bash
-npm --workspace docs-site run build
+bun run --filter ./docs-site build
 ```
 
 - In production, ensure container includes docs build artifact.

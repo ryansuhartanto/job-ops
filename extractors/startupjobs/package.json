@@ -12,6 +12,6 @@
   },
   "scripts": {
     "check:types": "tsc --noEmit",
-    "get-binaries": "npx playwright install"
+    "get-binaries": "bunx playwright install"
   }
 }

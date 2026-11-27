@@ -89,7 +89,7 @@ describe("extractor deployment config", () => {
       { encoding: "utf8" },
     );
 
-    expect(dockerfile).toContain("node ./scripts/camoufox-fetch.mjs");
+    expect(dockerfile).toContain("bun ./scripts/camoufox-fetch.mjs");
     expect(fetchScript).toContain(
       'import { downloadMmdb } from "@camoufox/camoufox/dist/geolocation.js";',
     );

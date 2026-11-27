@@ -3,7 +3,7 @@ import { readFileSync, writeFileSync } from "node:fs";
 const nextVersion = process.argv[2]?.trim();
 
 if (!nextVersion || !/^\d+\.\d+\.\d+$/.test(nextVersion)) {
-  console.error("Usage: node ./scripts/set-orchestrator-version.mjs <x.y.z>");
+  console.error("Usage: bun ./scripts/set-orchestrator-version.mjs <x.y.z>");
   process.exit(1);
 }
 

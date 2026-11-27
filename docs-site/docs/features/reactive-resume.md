@@ -219,8 +219,8 @@ Each theme folder contains:
 After adding or changing a theme, run:
 
 ```bash
-npm run typst-theme:generate
-npm run typst-theme:validate
+bun run typst-theme:generate
+bun run typst-theme:validate
 ```
 
 The generated shared metadata powers the settings dropdowns, so theme PRs do not need hand-written UI enum changes.

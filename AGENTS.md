@@ -96,7 +96,7 @@ When adding or updating user-facing docs:
 When adding a new extractor workspace under `extractors/`:
 
 - Update `docker-compose.yml` develop/watch sync entries if the extractor needs live-reload behavior in local container development.
-- Update all relevant `Dockerfile` stages so the extractor's `package*.json` files are copied before `npm install`, and the extractor directory itself is copied into build/runtime images.
+- Update all relevant `Dockerfile` stages so the extractor's `package*.json` files are copied before `bun install`, and the extractor directory itself is copied into build/runtime images.
 - Update deployment coverage in `orchestrator/src/server/extractors/deployment.test.ts` so Docker/compose support is asserted for the new extractor.
 - If this is missed, the source can appear in shared settings/UI but still fail at runtime as "not available at runtime" because the extractor manifest is not present inside the container.
 
@@ -109,18 +109,12 @@ Before marking work complete, verify changes with the same checks used by CI.
 Run from repository root:
 
 1. `./orchestrator/node_modules/.bin/biome ci .`
-2. `npm run check:types:shared`
-3. `npm --workspace orchestrator run check:types`
-4. `npm --workspace gradcracker-extractor run check:types`
-5. `npm --workspace ukvisajobs-extractor run check:types`
-6. `npm --workspace orchestrator run build:client`
-7. `npm --workspace orchestrator run test:run`
-
-### Native module note (better-sqlite3)
-
-If tests fail with a Node ABI mismatch for `better-sqlite3`, rebuild it before running tests:
-
-- `npm --workspace orchestrator rebuild better-sqlite3`
+2. `bun run check:types:shared`
+3. `bun run --filter ./orchestrator check:types`
+4. `bun run --filter gradcracker-extractor check:types`
+5. `bun run --filter ukvisajobs-extractor check:types`
+6. `bun run --filter ./orchestrator build:client`
+7. `bun run --filter ./orchestrator test:run`
 
 CI runs on Node 22. If local behavior differs, verify with Node 22 before concluding a change is valid.
 

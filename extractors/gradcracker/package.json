@@ -9,8 +9,7 @@
     "cheerio": "^1.0.0",
     "crawlee": "^3.0.0",
     "impit": "^0.11.0",
-    "playwright": "*",
-    "tsx": "^4.4.0"
+    "playwright": "*"
   },
   "devDependencies": {
     "@apify/tsconfig": "^0.1.0",
@@ -20,8 +19,8 @@
     "typescript": "~5.9.0"
   },
   "scripts": {
-    "start": "tsx src/main.ts",
-    "start:dev": "tsx src/main.ts",
+    "start": "bun src/main.ts",
+    "start:dev": "bun src/main.ts",
     "check:types": "tsc --noEmit",
     "test": "echo \"Error: oops, the actor has no tests yet, sad!\" && exit 1",
     "get-binaries": "camoufox-js fetch"

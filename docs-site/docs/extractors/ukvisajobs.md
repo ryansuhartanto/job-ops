@@ -56,7 +56,7 @@ Includes per-job JSON files and combined `jobs.json`.
 
 ## 5) Orchestrator flow
 
-- Spawns extractor (`npx tsx src/main.ts`)
+- Spawns extractor (`bun src/main.ts`)
 - Runs terms sequentially with delay
 - De-dupes by `sourceJobId` (fallback `jobUrl`)
 - Fetches detail pages when descriptions are too short

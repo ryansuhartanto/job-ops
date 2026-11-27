@@ -5,11 +5,11 @@
   "description": "Unified orchestrator for job application pipeline",
   "main": "src/server/index.ts",
   "scripts": {
-    "dev": "concurrently \"npm run dev:server\" \"npm run dev:client\"",
+    "dev": "concurrently \"bun run dev:server\" \"bun run dev:client\"",
     "dev:server": "bun --watch src/server/index.ts",
     "dev:client": "vite --host",
     "ladle": "ladle serve",
-    "check:all": "npm run check:types && npm run check:fix && npm run format:fix",
+    "check:all": "bun run check:types && bun run check:fix && bun run format:fix",
     "ci": "biome ci",
     "check": "biome check",
     "check:fix": "biome check --write",
@@ -94,7 +94,6 @@
     "tailwind-merge": "^3.6.0",
     "tailwindcss-animate": "^1.0.7",
     "tinykeys": "^3.1.0",
-    "tsx": "^4.22.4",
     "vaul": "^1.1.2",
     "zod": "^3.23.8",
     "zod-to-json-schema": "^3.25.2"

@@ -1,6 +1,5 @@
-import { spawn, spawnSync } from "node:child_process";
+import { spawn } from "node:child_process";
 import { readFile } from "node:fs/promises";
-import { createRequire } from "node:module";
 import { dirname, join } from "node:path";
 import { createInterface } from "node:readline";
 import { fileURLToPath } from "node:url";
@@ -19,8 +18,6 @@ const srcDir = dirname(fileURLToPath(import.meta.url));
 const EXTRACTOR_DIR = join(srcDir, "..");
 const DATASET_PATH = join(EXTRACTOR_DIR, "storage/datasets/default/jobs.json");
 const JOBOPS_PROGRESS_PREFIX = "JOBOPS_PROGRESS ";
-const require = createRequire(import.meta.url);
-const TSX_CLI_PATH = resolveTsxCliPath();
 
 type AdzunaRawJob = Record<string, unknown>;
 
@@ -61,19 +58,6 @@ export interface AdzunaResult {
   success: boolean;
   jobs: CreateJobInput[];
   error?: string;
-}
-
-function resolveTsxCliPath(): string | null {
-  try {
-    return require.resolve("tsx/dist/cli.mjs");
-  } catch {
-    return null;
-  }
-}
-
-function canRunNpmCommand(): boolean {
-  const result = spawnSync("npm", ["--version"], { stdio: "ignore" });
-  return !result.error && result.status === 0;
 }
 
 function parseAdzunaProgressLine(line: string): AdzunaProgressEvent | null {
@@ -200,15 +184,6 @@ export async function runAdzuna(
   });
   const runLocations = locations.length > 0 ? locations : [null];
   const termTotal = searchTerms.length * runLocations.length;
-  const useNpmCommand = canRunNpmCommand();
-  if (!useNpmCommand && !TSX_CLI_PATH) {
-    return {
-      success: false,
-      jobs: [],
-      error: "Unable to execute Adzuna extractor (npm/tsx unavailable)",
-    };
-  }
-
   try {
     const jobs: CreateJobInput[] = [];
     const seen = new Set<string>();
@@ -230,25 +205,11 @@ export async function runAdzuna(
           ADZUNA_OUTPUT_JSON: DATASET_PATH,
           ADZUNA_LOCATION_QUERY: strictLocationFilter ? location : "",
         };
-        const child = useNpmCommand
-          ? spawn("npm", ["run", "start"], {
-              cwd: EXTRACTOR_DIR,
-              stdio: ["ignore", "pipe", "pipe"],
-              env: extractorEnv,
-            })
-          : (() => {
-              const tsxCliPath = TSX_CLI_PATH;
-              if (!tsxCliPath) {
-                throw new Error(
-                  "Unable to execute Adzuna extractor (npm/tsx unavailable)",
-                );
-              }
-              return spawn(process.execPath, [tsxCliPath, "src/main.ts"], {
-                cwd: EXTRACTOR_DIR,
-                stdio: ["ignore", "pipe", "pipe"],
-                env: extractorEnv,
-              });
-            })();
+        const child = spawn(process.execPath, ["src/main.ts"], {
+          cwd: EXTRACTOR_DIR,
+          stdio: ["ignore", "pipe", "pipe"],
+          env: extractorEnv,
+        });
 
         const handleLine = (line: string, stream: NodeJS.WriteStream) => {
           const progressEvent = parseAdzunaProgressLine(line);

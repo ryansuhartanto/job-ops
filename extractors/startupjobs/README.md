@@ -6,5 +6,5 @@ Extractor wrapper around the published `startup-jobs-scraper` package.
 
 - Uses `scrapeStartupJobsViaAlgolia` directly from `startup-jobs-scraper`.
 - Runs with `enrichDetails: true` so job descriptions and other detail-page fields are fetched during pipeline runs.
-- Browser binaries are not downloaded automatically. Install them with `npx playwright install` or `npm --workspace startupjobs-extractor run get-binaries`.
+- Browser binaries are not downloaded automatically. Install them with `bunx playwright install` or `bun run --filter startupjobs-extractor get-binaries`.
 - Reuses the pipeline's existing search terms, country, city, and budget controls.

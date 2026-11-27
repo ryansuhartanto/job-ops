@@ -63,7 +63,7 @@ Local run example:
 HIRING_CAFE_SEARCH_TERMS='["backend engineer"]' \
 HIRING_CAFE_COUNTRY='united kingdom' \
 HIRING_CAFE_MAX_JOBS_PER_TERM='50' \
-npm --workspace hiringcafe-extractor run start
+bun run --filter hiringcafe-extractor start
 ```
 
 ## Common problems
