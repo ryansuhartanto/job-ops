@@ -38,6 +38,7 @@ export default defineConfig({
     environment: "jsdom",
     setupFiles: "./src/setupTests.ts",
     pool: "forks",
+    deps: { interopDefault: false },
     maxWorkers: 4,
     testTimeout: 60_000,
     hookTimeout: 60_000,

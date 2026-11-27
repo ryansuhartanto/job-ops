@@ -1,7 +1,7 @@
 import type { Server } from "node:http";
 import { request as httpRequest } from "node:http";
 import { join } from "node:path";
-import Database from "better-sqlite3";
+import Database from "bun:sqlite";
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
 import { startServer, stopServer } from "../api/routes/test-utils";
 

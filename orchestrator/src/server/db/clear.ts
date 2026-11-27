@@ -4,7 +4,7 @@
 
 import { existsSync, unlinkSync } from "node:fs";
 import { join } from "node:path";
-import Database from "better-sqlite3";
+import Database from "bun:sqlite";
 import { getDataDir } from "../config/dataDir";
 
 // Database path - can be overridden via env for Docker

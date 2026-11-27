@@ -7,4 +7,4 @@
 
 # Run the app
 cd /app/orchestrator
-exec sh -c "bun tsx src/server/db/migrate.ts && bun run start"
+exec sh -c "bun src/server/db/migrate.ts && bun run start"

@@ -2,7 +2,7 @@ import { mkdtemp, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { basename, join, resolve } from "node:path";
 import { format } from "node:util";
-import Database from "better-sqlite3";
+import Database from "bun:sqlite";
 
 type Scenario = {
   label: string;
@@ -141,12 +141,11 @@ async function createDbSnapshot(
   destinationDbPath: string,
 ) {
   const sourceDb = new Database(sourceDbPath, {
-    fileMustExist: true,
     readonly: true,
   });
 
   try {
-    await sourceDb.backup(destinationDbPath);
+    sourceDb.run("VACUUM INTO ?", [destinationDbPath]);
   } finally {
     sourceDb.close();
   }

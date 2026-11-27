@@ -19,7 +19,7 @@ describe.sequential("database migrations", () => {
     const script = `
       import { join } from "node:path";
       import { pathToFileURL } from "node:url";
-      import Database from "better-sqlite3";
+      import Database from "bun:sqlite";
 
       const dbPath = join(process.env.DATA_DIR, "jobs.db");
       const sqlite = new Database(dbPath);
@@ -48,7 +48,7 @@ describe.sequential("database migrations", () => {
 
     execFileSync(
       process.execPath,
-      ["--import", "tsx", "--input-type=module", "-e", script],
+      ["-e", script],
       {
         env: {
           ...process.env,
@@ -64,7 +64,7 @@ describe.sequential("database migrations", () => {
     const script = `
       import { join } from "node:path";
       import { pathToFileURL } from "node:url";
-      import Database from "better-sqlite3";
+      import Database from "bun:sqlite";
 
       const dbPath = join(process.env.DATA_DIR, "jobs.db");
       await import(pathToFileURL(join(process.cwd(), "src/server/db/migrate.ts")).href);
@@ -88,7 +88,7 @@ describe.sequential("database migrations", () => {
 
     execFileSync(
       process.execPath,
-      ["--import", "tsx", "--input-type=module", "-e", script],
+      ["-e", script],
       {
         env: {
           ...process.env,
@@ -104,7 +104,7 @@ describe.sequential("database migrations", () => {
     const script = `
       import { join } from "node:path";
       import { pathToFileURL } from "node:url";
-      import Database from "better-sqlite3";
+      import Database from "bun:sqlite";
 
       const dbPath = join(process.env.DATA_DIR, "jobs.db");
       const sqlite = new Database(dbPath);
@@ -133,7 +133,7 @@ describe.sequential("database migrations", () => {
 
     execFileSync(
       process.execPath,
-      ["--import", "tsx", "--input-type=module", "-e", script],
+      ["-e", script],
       {
         env: { ...process.env, DATA_DIR: tempDir },
         stdio: "pipe",
@@ -146,7 +146,7 @@ describe.sequential("database migrations", () => {
     const script = `
       import { join } from "node:path";
       import { pathToFileURL } from "node:url";
-      import Database from "better-sqlite3";
+      import Database from "bun:sqlite";
 
       const dbPath = join(process.env.DATA_DIR, "jobs.db");
       await import(pathToFileURL(join(process.cwd(), "src/server/db/migrate.ts")).href);
@@ -190,7 +190,7 @@ describe.sequential("database migrations", () => {
 
     execFileSync(
       process.execPath,
-      ["--import", "tsx", "--input-type=module", "-e", script],
+      ["-e", script],
       {
         env: {
           ...process.env,
@@ -206,11 +206,12 @@ describe.sequential("database migrations", () => {
     const script = `
       import { join } from "node:path";
       import { pathToFileURL } from "node:url";
-      import Database from "better-sqlite3";
+      import Database from "bun:sqlite";
 
       const dbPath = join(process.env.DATA_DIR, "jobs.db");
-      const migrationUrl = pathToFileURL(join(process.cwd(), "src/server/db/migrate.ts")).href;
-      await import(\`\${migrationUrl}?run=initial\`);
+      // Bun ignores the query on file:// URLs, so a plain path is needed to run the module again.
+      const migrationPath = join(process.cwd(), "src/server/db/migrate.ts");
+      await import(\`\${migrationPath}?run=initial\`);
 
       const sqlite = new Database(dbPath);
       sqlite.prepare("INSERT INTO jobs(id, title, employer, job_url, pdf_path, pdf_source) VALUES (?, ?, ?, ?, ?, NULL)").run(
@@ -222,7 +223,7 @@ describe.sequential("database migrations", () => {
       );
       sqlite.close();
 
-      await import(\`\${migrationUrl}?run=backfill\`);
+      await import(\`\${migrationPath}?run=backfill\`);
 
       const migratedDb = new Database(dbPath, { readonly: true });
       const row = migratedDb.prepare("SELECT pdf_source FROM jobs WHERE id = ?").get("legacy-pdf-job");
@@ -234,7 +235,7 @@ describe.sequential("database migrations", () => {
 
     execFileSync(
       process.execPath,
-      ["--import", "tsx", "--input-type=module", "-e", script],
+      ["-e", script],
       {
         env: {
           ...process.env,
@@ -250,7 +251,7 @@ describe.sequential("database migrations", () => {
     const script = `
       import { join } from "node:path";
       import { pathToFileURL } from "node:url";
-      import Database from "better-sqlite3";
+      import Database from "bun:sqlite";
 
       const dbPath = join(process.env.DATA_DIR, "jobs.db");
       const sqlite = new Database(dbPath);
@@ -313,7 +314,7 @@ describe.sequential("database migrations", () => {
 
     execFileSync(
       process.execPath,
-      ["--import", "tsx", "--input-type=module", "-e", script],
+      ["-e", script],
       {
         env: {
           ...process.env,
@@ -329,7 +330,7 @@ describe.sequential("database migrations", () => {
     const script = `
       import { join } from "node:path";
       import { pathToFileURL } from "node:url";
-      import Database from "better-sqlite3";
+      import Database from "bun:sqlite";
 
       const dbPath = join(process.env.DATA_DIR, "jobs.db");
       const sqlite = new Database(dbPath);
@@ -374,9 +375,10 @@ describe.sequential("database migrations", () => {
       \`);
       sqlite.close();
 
-      const migrationUrl = pathToFileURL(join(process.cwd(), "src/server/db/migrate.ts")).href;
-      await import(\`\${migrationUrl}?run=initial\`);
-      await import(\`\${migrationUrl}?run=rerun\`);
+      // Bun ignores the query on file:// URLs, so a plain path is needed to run the module again.
+      const migrationPath = join(process.cwd(), "src/server/db/migrate.ts");
+      await import(\`\${migrationPath}?run=initial\`);
+      await import(\`\${migrationPath}?run=rerun\`);
 
       const migratedDb = new Database(dbPath);
       const columns = migratedDb.prepare("PRAGMA table_info(users)").all();
@@ -419,7 +421,7 @@ describe.sequential("database migrations", () => {
 
     execFileSync(
       process.execPath,
-      ["--import", "tsx", "--input-type=module", "-e", script],
+      ["-e", script],
       {
         env: {
           ...process.env,
@@ -437,7 +439,7 @@ describe.sequential("database migrations", () => {
     const script = `
       import { join } from "node:path";
       import { pathToFileURL } from "node:url";
-      import Database from "better-sqlite3";
+      import Database from "bun:sqlite";
 
       const dbPath = join(process.env.DATA_DIR, "jobs.db");
       await import(pathToFileURL(join(process.cwd(), "src/server/db/migrate.ts")).href);
@@ -507,7 +509,7 @@ describe.sequential("database migrations", () => {
 
     execFileSync(
       process.execPath,
-      ["--import", "tsx", "--input-type=module", "-e", script],
+      ["-e", script],
       {
         env: {
           ...process.env,
@@ -523,7 +525,7 @@ describe.sequential("database migrations", () => {
     const script = `
       import { join } from "node:path";
       import { pathToFileURL } from "node:url";
-      import Database from "better-sqlite3";
+      import Database from "bun:sqlite";
 
       const dbPath = join(process.env.DATA_DIR, "jobs.db");
       await import(pathToFileURL(join(process.cwd(), "src/server/db/migrate.ts")).href);
@@ -566,7 +568,7 @@ describe.sequential("database migrations", () => {
 
     execFileSync(
       process.execPath,
-      ["--import", "tsx", "--input-type=module", "-e", script],
+      ["-e", script],
       {
         env: {
           ...process.env,
@@ -580,9 +582,6 @@ describe.sequential("database migrations", () => {
     execFileSync(
       process.execPath,
       [
-        "--import",
-        "tsx",
-        "--input-type=module",
         "-e",
         `import { join } from "node:path"; import { pathToFileURL } from "node:url"; await import(pathToFileURL(join(process.cwd(), "src/server/db/migrate.ts")).href);`,
       ],
@@ -602,13 +601,13 @@ describe.sequential("database migrations", () => {
     const exec = (script: string) =>
       execFileSync(
         process.execPath,
-        ["--import", "tsx", "--input-type=module", "-e", script],
+        ["-e", script],
         { env: { ...process.env, DATA_DIR: tempDir ?? "" }, stdio: "pipe" },
       );
 
     exec(`
       ${runMigrations}
-      import Database from "better-sqlite3";
+      import Database from "bun:sqlite";
       const db = new Database(join(process.env.DATA_DIR, "jobs.db"));
       const columns = db.prepare("PRAGMA table_info(jobs)").all().map((column) => column.name);
       for (const required of ["role_cv_id", "role_cv_match_source"]) {
@@ -623,7 +622,7 @@ describe.sequential("database migrations", () => {
     // The jobs table is rebuilt on every boot; the reference must survive it.
     exec(`
       ${runMigrations}
-      import Database from "better-sqlite3";
+      import Database from "bun:sqlite";
       const db = new Database(join(process.env.DATA_DIR, "jobs.db"), { readonly: true });
       const row = db.prepare("SELECT role_cv_id, role_cv_match_source FROM jobs WHERE id = ?").get("job-1");
       if (row?.role_cv_id !== "cv-1" || row?.role_cv_match_source !== "manual") {
@@ -638,14 +637,14 @@ describe.sequential("database migrations", () => {
     const script = `
       import { join } from "node:path";
       import { pathToFileURL } from "node:url";
-      import Database from "better-sqlite3";
+      import Database from "bun:sqlite";
 
       const dbPath = join(process.env.DATA_DIR, "jobs.db");
       // The database was already migrated once: a second boot must not fail.
       await import(pathToFileURL(join(process.cwd(), "src/server/db/migrate.ts")).href);
 
       const migratedDb = new Database(dbPath);
-      migratedDb.pragma("foreign_keys = ON");
+      migratedDb.run("PRAGMA foreign_keys = ON");
 
       const fks = migratedDb.prepare("PRAGMA foreign_key_list(access_tokens)").all();
       const cascades = (from, table) => fks.some((fk) => fk.from === from && fk.table === table && String(fk.on_delete).toUpperCase() === "CASCADE");
@@ -689,7 +688,7 @@ describe.sequential("database migrations", () => {
     for (const source of [migrateOnly, script]) {
       execFileSync(
         process.execPath,
-        ["--import", "tsx", "--input-type=module", "-e", source],
+        ["-e", source],
         {
           env: {
             ...process.env,
@@ -707,14 +706,14 @@ describe.sequential("database migrations", () => {
     const exec = (script: string) =>
       execFileSync(
         process.execPath,
-        ["--import", "tsx", "--input-type=module", "-e", script],
+        ["-e", script],
         { env: { ...process.env, DATA_DIR: tempDir ?? "" }, stdio: "pipe" },
       );
 
     // An install from before scheduled runs: pipeline_runs has no trigger.
     exec(`
       import { join } from "node:path";
-      import Database from "better-sqlite3";
+      import Database from "bun:sqlite";
       const db = new Database(join(process.env.DATA_DIR, "jobs.db"));
       db.exec(\`
         CREATE TABLE pipeline_runs (
@@ -734,7 +733,7 @@ describe.sequential("database migrations", () => {
 
     exec(`
       ${runMigrations}
-      import Database from "better-sqlite3";
+      import Database from "bun:sqlite";
       const db = new Database(join(process.env.DATA_DIR, "jobs.db"));
       const old = db.prepare("SELECT run_trigger FROM pipeline_runs WHERE id = ?").get("old-run");
       if (!old || old.run_trigger !== null) throw new Error(\`old run changed: \${JSON.stringify(old)}\`);
@@ -745,9 +744,9 @@ describe.sequential("database migrations", () => {
     // pipeline_runs is rebuilt on every boot; the trigger must survive it.
     exec(`
       ${runMigrations}
-      import Database from "better-sqlite3";
+      import Database from "bun:sqlite";
       const db = new Database(join(process.env.DATA_DIR, "jobs.db"));
-      db.pragma("foreign_keys = ON");
+      db.run("PRAGMA foreign_keys = ON");
       const row = db.prepare("SELECT run_trigger FROM pipeline_runs WHERE id = ?").get("scheduled-run");
       if (row?.run_trigger !== "schedule") {
         throw new Error(\`run trigger lost on reboot: \${JSON.stringify(row)}\`);
@@ -787,7 +786,7 @@ describe.sequential("database migrations", () => {
     const script = `
       import { join } from "node:path";
       import { pathToFileURL } from "node:url";
-      import Database from "better-sqlite3";
+      import Database from "bun:sqlite";
 
       const dbPath = join(process.env.DATA_DIR, "jobs.db");
       await import(pathToFileURL(join(process.cwd(), "src/server/db/migrate.ts")).href);
@@ -823,7 +822,7 @@ describe.sequential("database migrations", () => {
 
     execFileSync(
       process.execPath,
-      ["--import", "tsx", "--input-type=module", "-e", script],
+      ["-e", script],
       {
         env: {
           ...process.env,
