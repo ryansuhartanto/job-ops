@@ -183,3 +183,27 @@ jobs:
           else
             gh release create "v$RELEASE_VERSION" --title "$RELEASE_TITLE" --generate-notes
           fi
+
+      - name: Install MCPB bundle dependencies
+        working-directory: jobops-mcpb
+        run: npm ci --omit=dev
+
+      - name: Pack MCPB bundle
+        working-directory: jobops-mcpb
+        env:
+          RELEASE_VERSION: ${{ inputs.version }}
+        run: |
+          node -e '
+            const fs = require("node:fs");
+            const manifest = JSON.parse(fs.readFileSync("manifest.json", "utf8"));
+            manifest.version = process.env.RELEASE_VERSION;
+            fs.writeFileSync("manifest.json", `${JSON.stringify(manifest, null, 2)}\n`);
+          '
+          npx -y @anthropic-ai/mcpb@2.1.2 validate manifest.json
+          npx -y @anthropic-ai/mcpb@2.1.2 pack . jobops.mcpb
+
+      - name: Attach MCPB bundle to release
+        env:
+          GH_TOKEN: ${{ github.token }}
+          RELEASE_VERSION: ${{ inputs.version }}
+        run: gh release upload "v$RELEASE_VERSION" jobops-mcpb/jobops.mcpb --clobber

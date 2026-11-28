@@ -102,3 +102,27 @@ jobs:
       - name: Build documentation site
         run: npm run check:docs
         working-directory: .
+
+  mcpb:
+    name: MCPB Bundle
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: jobops-mcpb
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: "npm"
+          cache-dependency-path: jobops-mcpb/package-lock.json
+
+      - name: Install bundle dependencies
+        run: npm ci --omit=dev
+
+      - name: Validate manifest
+        run: npx -y @anthropic-ai/mcpb@2.1.2 validate manifest.json
+
+      - name: Pack bundle
+        run: npx -y @anthropic-ai/mcpb@2.1.2 pack . jobops.mcpb
