@@ -11,6 +11,7 @@
     "type": "git",
     "url": "https://github.com/pablonification/job-ops"
   },
+  "license": "AGPL-3.0-only WITH AdditionRef-Commons-Clause",
   "server": {
     "type": "node",
     "entry_point": "node_modules/mcp-remote/dist/proxy.js",
