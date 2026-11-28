@@ -1,0 +1,8 @@
+{
+  "name": "jobops-mcpb",
+  "private": true,
+  "description": "Claude Desktop extension bundle for the JobOps MCP endpoint",
+  "dependencies": {
+    "mcp-remote": "^0.17.1"
+  }
+}

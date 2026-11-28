@@ -1,0 +1,43 @@
+{
+  "manifest_version": "0.4",
+  "name": "jobops",
+  "display_name": "JobOps",
+  "version": "0.1.0",
+  "description": "Connect Claude to a JobOps instance over its MCP endpoint.",
+  "author": {
+    "name": "Ryan"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/pablonification/job-ops"
+  },
+  "server": {
+    "type": "node",
+    "entry_point": "node_modules/mcp-remote/dist/proxy.js",
+    "mcp_config": {
+      "command": "node",
+      "args": [
+        "${__dirname}/node_modules/mcp-remote/dist/proxy.js",
+        "${user_config.url}",
+        "--header",
+        "Authorization:Bearer ${user_config.token}"
+      ]
+    }
+  },
+  "user_config": {
+    "url": {
+      "type": "string",
+      "title": "JobOps MCP URL",
+      "description": "The /mcp endpoint of your JobOps server. Use http://localhost:3005/mcp for docker compose.",
+      "required": true,
+      "default": "http://localhost:3001/mcp"
+    },
+    "token": {
+      "type": "string",
+      "title": "Access token",
+      "description": "A jo_pat_ token from Settings → Workspaces & Security → Agent access.",
+      "required": true,
+      "sensitive": true
+    }
+  }
+}
