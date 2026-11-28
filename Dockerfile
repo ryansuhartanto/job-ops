@@ -3,7 +3,7 @@
 # ============================================================================
 # SHARED BASE IMAGES
 # ============================================================================
-FROM --platform=$TARGETPLATFORM node:22-slim AS runtime-base
+FROM --platform=$TARGETPLATFORM debian:bookworm-slim AS runtime-base
 
 ENV DEBIAN_FRONTEND=noninteractive
 ENV NODE_ENV=production
@@ -12,9 +12,13 @@ ENV PYTHON_PATH=/usr/bin/python3
 ENV DATA_DIR=/app/data
 ENV CODEX_HOME=/app/codex-home
 ENV PLAYWRIGHT_BROWSERS_PATH=/ms-playwright
-ENV PATH=/root/.local/bin:${PATH}
+ENV PATH=/root/.bun/bin:/root/.local/bin:${PATH}
 ARG CODEX_CLI_VERSION=0.144.6
 ARG CLAUDE_CLI_VERSION=2.1.211
+
+COPY --from=oven/bun /usr/local/bin/bun /usr/local/bin/bun
+# Binaries with a `#!/usr/bin/env node` launcher, such as the Codex CLI, run on Bun.
+RUN ln -s /usr/local/bin/bun /usr/local/bin/node
 
 # Install runtime dependencies shared by build and production stages.
 RUN apt-get update && apt-get install -y --no-install-recommends \
@@ -27,17 +31,21 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     rm -rf /var/lib/apt/lists/* /var/cache/apt/archives/*
 
 # Install Codex CLI for local app-server based inference.
-RUN npm install -g @openai/codex@${CODEX_CLI_VERSION}
+RUN bun add -g @openai/codex@${CODEX_CLI_VERSION}
 
 # Install Claude Code CLI for headless claude_cli provider inference.
-RUN npm install -g @anthropic-ai/claude-code@${CLAUDE_CLI_VERSION}
+RUN bun add -g @anthropic-ai/claude-code@${CLAUDE_CLI_VERSION}
 
 WORKDIR /app
 
-FROM --platform=$BUILDPLATFORM node:22-slim AS build-base
+FROM --platform=$BUILDPLATFORM debian:bookworm-slim AS build-base
 
 ENV DEBIAN_FRONTEND=noninteractive
 ENV NODE_ENV=production
+
+COPY --from=oven/bun /usr/local/bin/bun /usr/local/bin/bun
+# Binaries with a `#!/usr/bin/env node` launcher, such as the Codex CLI, run on Bun.
+RUN ln -s /usr/local/bin/bun /usr/local/bin/node
 
 WORKDIR /app
 
@@ -75,7 +83,7 @@ FROM build-base AS node-deps
 ARG BUILDARCH
 
 # Copy package files for dependency installation.
-COPY package*.json ./
+COPY package.json bun.lock ./
 COPY docs-site/package*.json ./docs-site/
 COPY shared/package*.json ./shared/
 COPY orchestrator/package*.json ./orchestrator/
@@ -105,8 +113,7 @@ COPY extractors/idbigtech/package*.json ./extractors/idbigtech/
 
 # Install build-time Node dependencies on the native builder platform. The
 # resulting client/docs assets are architecture-neutral static files.
-RUN npm install --workspaces --include-workspace-root --include=dev \
-    --no-audit --no-fund --progress=false
+RUN bun ci
 
 FROM node-deps AS build-sources
 
@@ -145,13 +152,12 @@ COPY extractors/idbigtech ./extractors/idbigtech
 FROM build-sources AS docs-build
 
 WORKDIR /app/docs-site
-ENV NODE_OPTIONS=--max-old-space-size=1536
-RUN npm run build
+RUN bun run build
 
 FROM build-sources AS client-build
 
 WORKDIR /app/orchestrator
-RUN npm run build:client
+RUN bun run build:client
 
 # ============================================================================
 # PRODUCTION INPUT STAGES
@@ -166,7 +172,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     rm -rf /var/lib/apt/lists/* /var/cache/apt/archives/*
 
 # Copy package files for production dependency installation.
-COPY package*.json ./
+COPY package.json bun.lock ./
 COPY docs-site/package*.json ./docs-site/
 COPY shared/package*.json ./shared/
 COPY orchestrator/package*.json ./orchestrator/
@@ -197,14 +203,13 @@ COPY extractors/idbigtech/package*.json ./extractors/idbigtech/
 # Install production Node dependencies only. Do not add --omit=optional: the
 # Claude Agent SDK (claude_agent_sdk provider) ships its Claude Code binary as a
 # per-platform optional dependency.
-RUN npm install --workspaces --include-workspace-root --omit=dev \
-    --no-audit --no-fund --progress=false \
-    && npm cache clean --force
+RUN bun ci --omit=dev \
+    && rm -rf /root/.bun/install/cache
 
 # Fail the build if the Agent SDK's native Claude Code binary for this platform
 # is missing or cannot run (no network or credentials involved).
 RUN cd orchestrator && \
-    claude_sdk_bin="$(node -e "process.stdout.write(require.resolve('@anthropic-ai/claude-agent-sdk-linux-' + process.arch + '/claude'))")" && \
+    claude_sdk_bin="$(bun -e "process.stdout.write(require.resolve('@anthropic-ai/claude-agent-sdk-linux-' + process.arch + '/claude'))")" && \
     "$claude_sdk_bin" --version
 
 
@@ -213,7 +218,7 @@ FROM runtime-node-deps AS camoufox-cache
 # Fetch target-platform Camoufox binaries after production dependencies are
 # installed so arm64 images do not inherit x64 browser assets from build stages.
 COPY scripts/camoufox-fetch.mjs ./scripts/camoufox-fetch.mjs
-RUN node ./scripts/camoufox-fetch.mjs
+RUN bun ./scripts/camoufox-fetch.mjs
 
 FROM runtime-base AS tectonic
 

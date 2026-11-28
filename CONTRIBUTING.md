@@ -28,11 +28,11 @@ Use the path that matches your change:
 
 | Path | Main folders | Start command(s) | Canonical docs |
 | --- | --- | --- | --- |
-| Docs/content | `docs-site/docs` | `npm run docs:dev` | [Docs style guide](https://jobops.dakheera47.com/docs/next/reference/documentation-style-guide), [FAQ](https://jobops.dakheera47.com/docs/next/reference/faq) |
-| App/UI/API | `orchestrator`, `shared` | `npm --workspace orchestrator run dev` | [Self-hosting](https://jobops.dakheera47.com/docs/getting-started/self-hosting), [Troubleshooting](https://jobops.dakheera47.com/docs/next/troubleshooting/common-problems) |
-| Watchlist source adapters | `orchestrator/src/server/watchlist/adapters`, `orchestrator/src/server/config` | `npm --workspace orchestrator run dev` | [Watchlist](https://jobops.dakheera47.com/docs/next/features/watchlist) |
+| Docs/content | `docs-site/docs` | `bun run docs:dev` | [Docs style guide](https://jobops.dakheera47.com/docs/next/reference/documentation-style-guide), [FAQ](https://jobops.dakheera47.com/docs/next/reference/faq) |
+| App/UI/API | `orchestrator`, `shared` | `bun run --filter ./orchestrator dev` | [Self-hosting](https://jobops.dakheera47.com/docs/getting-started/self-hosting), [Troubleshooting](https://jobops.dakheera47.com/docs/next/troubleshooting/common-problems) |
+| Watchlist source adapters | `orchestrator/src/server/watchlist/adapters`, `orchestrator/src/server/config` | `bun run --filter ./orchestrator dev` | [Watchlist](https://jobops.dakheera47.com/docs/next/features/watchlist) |
 | Extractors | `extractors/*`, sometimes `shared` | Relevant type checks + tests | [Add an extractor](https://jobops.dakheera47.com/docs/next/workflows/add-an-extractor), [Extractors overview](https://jobops.dakheera47.com/docs/extractors/overview) |
-| Typst resume themes | `orchestrator/src/server/services/resume-renderer/typst-themes` | `npm run typst-theme:validate` | [Reactive Resume](https://jobops.dakheera47.com/docs/features/reactive-resume) |
+| Typst resume themes | `orchestrator/src/server/services/resume-renderer/typst-themes` | `bun run typst-theme:validate` | [Reactive Resume](https://jobops.dakheera47.com/docs/features/reactive-resume) |
 
 ## Local Setup (Minimal)
 
@@ -41,9 +41,9 @@ For full end-user setup, environment variables, OAuth, and deployment details, u
 Contributor baseline from repo root:
 
 ```bash
-npm ci
-npm --workspace orchestrator run db:migrate
-npm --workspace orchestrator run dev
+bun ci
+bun run --filter ./orchestrator db:migrate
+bun run --filter ./orchestrator dev
 ```
 
 If you are working with extractors that use Glassdoor, Indeed, or LinkedIn (powered by python-jobspy), set up the Python venv once:
@@ -58,7 +58,7 @@ The runner auto-detects the venv — no need to set `PYTHON_PATH`.
 If you are editing docs:
 
 ```bash
-npm run docs:dev
+bun run docs:dev
 ```
 
 Local URLs:
@@ -142,8 +142,8 @@ Typst themes are folder-based so a theme PR can stay small:
 2. Rename the folder and set the same kebab-case value in `theme.json` as `id`.
 3. Update `label`, `description`, `entrypoint`, and native `tokens`.
 4. Edit the Typst entrypoint, usually `main.typ`.
-5. Run `npm run typst-theme:generate` to refresh shared theme metadata.
-6. Run `npm run typst-theme:validate`.
+5. Run `bun run typst-theme:generate` to refresh shared theme metadata.
+6. Run `bun run typst-theme:validate`.
 
 Native themes use the JobOps resume document model and token placeholders. Adapted themes can read the normalized resume document from `json(__RESUME_DATA_PATH__)` inside their Typst entrypoint, which is the recommended path for Typst Universe packages with their own layout APIs.
 
@@ -159,7 +159,7 @@ Releases are driven from GitHub Actions.
 The workflow will:
 
 - bump `orchestrator/package.json`
-- update `package-lock.json`
+- update `bun.lock`
 - cut the matching Docusaurus docs version
 - commit the version bump to `main`
 - create and push tag `vX.Y.Z`
@@ -173,22 +173,16 @@ The app version shown in the UI is sourced from `orchestrator/package.json`, so 
 Run from the repository root:
 
 ```bash
-./orchestrator/node_modules/.bin/biome ci .
-npm run check:types:shared
-npm --workspace orchestrator run check:types
-npm --workspace gradcracker-extractor run check:types
-npm --workspace ukvisajobs-extractor run check:types
-npm --workspace orchestrator run build:client
-npm --workspace orchestrator run test:run
+bun --bun ./orchestrator/node_modules/.bin/biome ci .
+bun run check:types:shared
+bun run --filter ./orchestrator check:types
+bun run --filter gradcracker-extractor check:types
+bun run --filter ukvisajobs-extractor check:types
+bun run --filter ./orchestrator build:client
+bun run --filter ./orchestrator test:run
 ```
 
-If tests fail due to a `better-sqlite3` Node ABI mismatch, rebuild it and rerun tests:
-
-```bash
-npm --workspace orchestrator rebuild better-sqlite3
-```
-
-CI runs on Node 22. If local behavior differs, verify with Node 22 before concluding a change is valid.
+CI runs on the latest Bun. If local behavior differs, verify with the latest Bun before concluding a change is valid.
 
 ## Project-Specific Standards (Link-First)
 

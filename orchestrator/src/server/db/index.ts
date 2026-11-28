@@ -2,10 +2,11 @@
  * Database connection and initialization.
  */
 
+import Database, { type Changes } from "bun:sqlite";
 import { existsSync, mkdirSync } from "node:fs";
 import { dirname, join } from "node:path";
-import Database from "better-sqlite3";
-import { drizzle } from "drizzle-orm/better-sqlite3";
+import { drizzle } from "drizzle-orm/bun-sqlite";
+import type { BaseSQLiteDatabase } from "drizzle-orm/sqlite-core";
 import { getDataDir } from "../config/dataDir";
 import * as schema from "./schema";
 
@@ -19,10 +20,20 @@ if (!existsSync(dataDir)) {
 }
 
 const sqlite = new Database(DB_PATH);
-sqlite.pragma("journal_mode = WAL");
+// better-sqlite3 enabled these by default; bun:sqlite does not. The timeout
+// comes first so switching to WAL waits for a lock instead of failing.
+sqlite.run("PRAGMA busy_timeout = 5000");
+sqlite.run("PRAGMA foreign_keys = ON");
+sqlite.run("PRAGMA journal_mode = WAL");
 let isClosed = false;
 
-export const db = drizzle(sqlite, { schema });
+// shortcut: drizzle 0.45 types bun-sqlite run results as void although bun:sqlite
+// returns Changes; drop the cast once drizzle types it (1.0 does).
+export const db = drizzle(sqlite, { schema }) as unknown as BaseSQLiteDatabase<
+  "sync",
+  Changes,
+  typeof schema
+>;
 
 export { schema };
 

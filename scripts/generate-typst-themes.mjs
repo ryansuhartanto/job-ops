@@ -200,7 +200,7 @@ if (checkOnly) {
   const current = await readFile(outputPath, "utf8").catch(() => null);
   if (current !== generated) {
     throw new Error(
-      `${relative(repoRoot, outputPath)} is stale. Run npm run typst-theme:generate.`,
+      `${relative(repoRoot, outputPath)} is stale. Run bun run typst-theme:generate.`,
     );
   }
   console.log(`Validated ${manifests.length} Typst theme manifests.`);

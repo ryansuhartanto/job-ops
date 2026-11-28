@@ -188,7 +188,7 @@ export function summarizeGradcrackerBrowserFailure(
     return [
       "Gradcracker browser fallback could not launch Playwright Firefox.",
       path ? `Missing executable: ${path}.` : undefined,
-      "Rebuild the Docker image so the Node Playwright browser binary is installed, or run `npx playwright install firefox` in the runtime image.",
+      "Rebuild the Docker image so the Node Playwright browser binary is installed, or run `bunx --bun playwright install firefox` in the runtime image.",
     ]
       .filter(Boolean)
       .join(" ");
@@ -791,9 +791,8 @@ async function runBrowserCrawler(
     );
 
     await new Promise<void>((resolve, reject) => {
-      const child = spawn("npm", ["run", "start"], {
+      const child = spawn(process.execPath, ["src/main.ts"], {
         cwd: EXTRACTOR_DIR,
-        shell: true,
         stdio: ["ignore", "pipe", "pipe"],
         env: {
           ...process.env,

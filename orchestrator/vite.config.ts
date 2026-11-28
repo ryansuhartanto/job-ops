@@ -38,6 +38,7 @@ export default defineConfig({
     environment: "jsdom",
     setupFiles: "./src/setupTests.ts",
     pool: "forks",
+    deps: { interopDefault: false },
     maxWorkers: 4,
     testTimeout: 60_000,
     hookTimeout: 60_000,
@@ -51,7 +52,7 @@ export default defineConfig({
       "../extractors/**/tests/**/*.test.ts",
       "../visa-sponsor-providers/**/*.test.ts",
     ],
-    exclude: ["node_modules/**", "dist/**"],
+    exclude: ["**/node_modules/**", "../**/node_modules/**", "dist/**"],
   },
   resolve: {
     alias: {

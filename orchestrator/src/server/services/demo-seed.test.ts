@@ -165,7 +165,8 @@ describe.sequential("demo seed baseline", () => {
       expect(job.pdfFingerprint).toEqual(expect.any(String));
       expect(getJobPdfFreshness(job, fingerprintContext)).toBe("current");
 
-      await expect(access(expectedPath)).resolves.toBeUndefined();
+      // Bun resolves fs access() with null, Node with undefined.
+      await access(expectedPath);
       const pdfBytes = await readFile(expectedPath);
       expect(pdfBytes.subarray(0, 5).toString()).toBe("%PDF-");
     }

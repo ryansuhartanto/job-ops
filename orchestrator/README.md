@@ -27,7 +27,7 @@ orchestrator/
 1. **Install dependencies:**
    ```bash
    cd orchestrator
-   npm install
+   bun install
    ```
 
 2. **Set up environment:**
@@ -51,12 +51,12 @@ orchestrator/
 
 3. **Initialize database:**
    ```bash
-   npm run db:migrate
+   bun run db:migrate
    ```
 
 4. **Start development server:**
    ```bash
-   npm run dev
+   bun run dev
    ```
 
     This starts:
@@ -131,17 +131,17 @@ Create a workflow with:
 
 ```bash
 # Run just the server
-npm run dev:server
+bun run dev:server
 
 # Run just the client
-npm run dev:client
+bun run dev:client
 
 # Run the pipeline manually
-npm run pipeline:run
+bun run pipeline:run
 
 # Build for production
-npm run build
-npm start
+bun run build
+bun start
 ```
 
 ## Tech Stack

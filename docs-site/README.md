@@ -7,7 +7,7 @@ Docusaurus workspace for user-facing documentation.
 From repository root:
 
 ```bash
-npm run docs:dev
+bun run docs:dev
 ```
 
 Local docs server runs on `http://localhost:3006`.
@@ -15,7 +15,7 @@ Local docs server runs on `http://localhost:3006`.
 ## Build
 
 ```bash
-npm run docs:build
+bun run docs:build
 ```
 
 Build output:
@@ -33,7 +33,7 @@ Set these environment variables for deploys:
 
 Defaults:
 
-- `DOCS_SITE_URL=http://localhost:3006` for local development (`npm run docs:dev`)
+- `DOCS_SITE_URL=http://localhost:3006` for local development (`bun run docs:dev`)
 - `DOCS_SITE_URL=https://jobops.dakheera47.com` for production builds when unset
 - `DOCS_BASE_URL=/docs/`
 
@@ -42,5 +42,5 @@ Defaults:
 Cut a docs version tied to a release tag:
 
 ```bash
-npm run docs:version -- 1.0.0
+bun run docs:version 1.0.0
 ```

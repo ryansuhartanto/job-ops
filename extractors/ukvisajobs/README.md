@@ -5,19 +5,19 @@ Fetches job listings from [my.ukvisajobs.com](https://my.ukvisajobs.com) that ma
 ## Setup
 
 ```bash
-npm install
+bun install
 ```
 
 If Playwright browsers are skipped in your environment, install Firefox:
 
 ```bash
-npx playwright install firefox
+bunx --bun playwright install firefox
 ```
 
 If Camoufox assets are missing, fetch them:
 
 ```bash
-npx camoufox-js fetch
+bunx --bun camoufox-js fetch
 ```
 
 ## Configuration
@@ -44,7 +44,7 @@ The extractor will:
 ## Running
 
 ```bash
-npm start
+bun start
 ```
 
 Output is written to `storage/datasets/default/` as JSON files.

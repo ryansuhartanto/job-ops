@@ -1,12 +1,12 @@
 ---
 name: orchestrator-code-quality
-description: Generate a code quality report for the orchestrator/ folder focusing on duplication, complexity hotspots, and error/logging consistency, using npm run check:all as the primary gate; report only (no code changes).
+description: Generate a code quality report for the orchestrator/ folder focusing on duplication, complexity hotspots, and error/logging consistency, using bun run check:all as the primary gate; report only (no code changes).
 license: MIT
 compatibility: opencode
 metadata:
   audience: maintainers
   repo_area: orchestrator
-  primary_command: npm run check:all
+  primary_command: bun run check:all
 ---
 
 ## What I do
@@ -16,7 +16,7 @@ metadata:
   1. **Duplication / near-duplication**
   2. **Over-complex functions / “god modules”**
   3. **Inconsistent error handling and logging**
-- Use `npm run check:all` as the authoritative signal for tests + linting.
+- Use `bun run check:all` as the authoritative signal for tests + linting.
 - Do **not** change code, configuration, scripts, or dependencies. This skill outputs a report only.
 
 ## When to use me
@@ -26,14 +26,14 @@ Use this when you want an evidence-driven code quality assessment and a prioriti
 ## Constraints
 
 - Work only in `orchestrator/`. Do not analyze or reference other folders except when required to understand imports into `orchestrator/`.
-- Do not propose changes to tooling. Assume `npm run check:all` is the existing gate.
+- Do not propose changes to tooling. Assume `bun run check:all` is the existing gate.
 - Do not perform refactors. Do not open PRs. Do not rewrite files. Report findings and recommended fixes only.
 
 ## Inputs I expect
 
 - Repository access with an `orchestrator/` directory.
-- Ability to run `npm run check:all` from within `orchestrator/`.
-- (Optional but recommended) Output logs from `npm run check:all` if the environment cannot run commands.
+- Ability to run `bun run check:all` from within `orchestrator/`.
+- (Optional but recommended) Output logs from `bun run check:all` if the environment cannot run commands.
 
 ## Process
 
@@ -41,7 +41,7 @@ Use this when you want an evidence-driven code quality assessment and a prioriti
    - Ensure all investigation is scoped to `orchestrator/`.
 
 2. **Execute quality gate**
-   - Run `npm run check:all` in `orchestrator/`.
+   - Run `bun run check:all` in `orchestrator/`.
    - Capture:
      - lint errors/warnings (rule IDs, counts, file paths)
      - failing tests (test names, stack traces, determinism vs flakiness indicators)
@@ -84,11 +84,11 @@ Create a single Markdown report containing these sections:
 
 ### 1. Scope and constraints
 
-- Confirm `orchestrator/` scope and reliance on `npm run check:all`.
+- Confirm `orchestrator/` scope and reliance on `bun run check:all`.
 
 ### 2. Evidence summary
 
-- `npm run check:all` outcome:
+- `bun run check:all` outcome:
   - Lint: top rule IDs + counts + representative file paths
   - Tests: failing tests list + deterministic vs flaky notes
   - Coverage: summary if present
@@ -126,11 +126,11 @@ Each phase must include:
 - Ordered list of actions
 - Expected blast radius (low/medium/high)
 - Required test additions (if any)
-- Validation steps (how to confirm improvement via `npm run check:all`)
+- Validation steps (how to confirm improvement via `bun run check:all`)
 
 ### 5. Definition of done
 
-- `npm run check:all` passes reliably
+- `bun run check:all` passes reliably
 - Measurable reduction in targeted duplication clusters
 - Complexity hotspots reduced or isolated behind clear boundaries
 - Error/logging behavior consistent at boundaries

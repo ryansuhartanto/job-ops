@@ -6,18 +6,18 @@
   "main": "src/main.ts",
   "dependencies": {
     "browser-utils": "^0.0.1",
-    "job-ops-shared": "^1.0.0",
-    "tsx": "^4.4.0"
+    "job-ops-shared": "^1.0.0"
   },
   "devDependencies": {
     "@types/node": "^24.0.0",
+    "playwright": "^1.57.0",
     "typescript": "~5.9.0",
     "vitest": "^4.0.16"
   },
   "scripts": {
-    "start": "tsx src/main.ts",
-    "start:dev": "tsx src/main.ts",
-    "check:types": "tsc --noEmit",
-    "test:run": "vitest run"
+    "start": "bun src/main.ts",
+    "start:dev": "bun src/main.ts",
+    "check:types": "bun --bun tsc --noEmit",
+    "test:run": "bun --bun vitest run"
   }
 }

@@ -2,7 +2,7 @@
  * Standalone script to run the pipeline.
  * Can be triggered by n8n or cron.
  *
- * Usage: npm run pipeline:run
+ * Usage: bun run pipeline:run
  */
 
 import "../config/env";

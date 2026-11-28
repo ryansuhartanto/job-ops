@@ -5,6 +5,7 @@
  * Stores backups in the same directory as the original database.
  */
 
+import Database from "bun:sqlite";
 import fs from "node:fs";
 import type { FileHandle } from "node:fs/promises";
 import path from "node:path";
@@ -12,7 +13,6 @@ import { logger } from "@infra/logger";
 import { getDataDir } from "@server/config/dataDir";
 import { createScheduler } from "@server/utils/scheduler";
 import type { BackupInfo } from "@shared/types";
-import Database from "better-sqlite3";
 
 const DB_FILENAME = "jobs.db";
 const AUTO_BACKUP_PREFIX = "jobs_";
@@ -185,8 +185,8 @@ export async function createBackup(type: "auto" | "manual"): Promise<string> {
 
   let sqlite: SqliteDatabase | null = null;
   try {
-    sqlite = new Database(dbPath, { readonly: true, fileMustExist: true });
-    await sqlite.backup(backupPath);
+    sqlite = new Database(dbPath, { readonly: true });
+    sqlite.run("VACUUM INTO ?", [backupPath]);
   } catch (error) {
     await fs.promises.unlink(backupPath).catch(() => undefined);
     throw error;

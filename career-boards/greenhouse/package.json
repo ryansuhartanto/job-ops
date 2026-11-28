@@ -9,5 +9,8 @@
     "./resolve-greenhouse-source": "./src/resolve-greenhouse-source.ts",
     "./get-jobs-from-board": "./src/get-jobs-from-board.ts",
     "./get-job-details": "./src/get-job-details.ts"
+  },
+  "devDependencies": {
+    "vitest": "^4.0.16"
   }
 }

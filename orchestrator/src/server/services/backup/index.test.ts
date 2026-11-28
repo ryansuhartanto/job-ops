@@ -1,7 +1,7 @@
+import Database from "bun:sqlite";
 import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
-import Database from "better-sqlite3";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import * as backup from "./index";
 
@@ -68,7 +68,6 @@ describe("Backup Service", () => {
       // Check backup is a valid SQLite database with expected data
       const backupDb = new Database(backupPath, {
         readonly: true,
-        fileMustExist: true,
       });
       try {
         const row = backupDb
@@ -94,7 +93,6 @@ describe("Backup Service", () => {
 
       const backupDb = new Database(backupPath, {
         readonly: true,
-        fileMustExist: true,
       });
       try {
         const count = backupDb
@@ -109,7 +107,7 @@ describe("Backup Service", () => {
     it("should add a suffix when manual backup name collides", async () => {
       const prevTz = process.env.TZ;
       process.env.TZ = "UTC";
-      // Only fake Date to keep async I/O (used by better-sqlite3 backup) real.
+      // Only fake Date to keep async I/O real.
       vi.useFakeTimers({ toFake: ["Date"] });
       try {
         vi.setSystemTime(new Date("2026-01-15T12:30:45.000Z"));

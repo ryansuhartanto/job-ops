@@ -324,7 +324,7 @@ export async function runUkVisaJobs(
         await mkdir(storageDir, { recursive: true });
 
         await new Promise<void>((resolve, reject) => {
-          const child = spawn("npx", ["tsx", "src/main.ts"], {
+          const child = spawn(process.execPath, ["src/main.ts"], {
             cwd: EXTRACTOR_DIR,
             stdio: ["ignore", "pipe", "pipe"],
             env: {
